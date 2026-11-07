@@ -1,0 +1,31 @@
+crear servicio 
+sudo nano /etc/systemd/system/adquisicion-irradiancia.service
+Guarda con Ctrl + O, Enter y Ctrl + X.
+
+sudo systemctl daemon-reload
+sudo systemctl enable adquisicion-irradiancia.service
+sudo systemctl restart adquisicion-irradiancia.service
+
+
+
+sudo chown rasp4:rasp4 /home/rasp4/Documents/iniciar_programas.py
+sudo chmod 644 /home/rasp4/Documents/iniciar_programas.py
+
+
+
+ls -l /home/rasp4/Documents/iniciar_programas.py
+
+
+
+sudo -u rasp4 test -r /home/rasp4/Documents/iniciar_programas.py && echo "PERMISOS CORRECTOS"
+
+
+
+sudo systemctl reset-failed adquisicion-irradiancia.service
+sudo systemctl start adquisicion-irradiancia.service
+
+
+sudo systemctl status adquisicion-irradiancia.service
+
+
+sudo journalctl -u adquisicion-irradiancia.service -n 50 --no-pager
