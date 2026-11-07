@@ -1,0 +1,27 @@
+
+[Unit]
+Description=Sistema de adquisicion de irradiancia ESP32 y programas Python
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+User=rasp4
+Group=rasp4
+
+WorkingDirectory=/home/rasp4/Documents
+
+ExecStart=/home/rasp4/Documents/Estacion/bin/python /home/rasp4/Documents/iniciar_programas.py
+
+Restart=always
+RestartSec=10
+
+KillMode=control-group
+TimeoutStopSec=30
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
