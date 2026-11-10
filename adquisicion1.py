@@ -1,3 +1,5 @@
+cat > adquisicion1.py <<'EOF'
+
 import os
 import time
 import math
@@ -58,20 +60,6 @@ DISPOSITIVOS = {
 # ==========================================================
 # ARCHIVOS TXT ADICIONALES
 # ==========================================================
-#
-# Aqui puedes agregar archivos generados por otros programas.
-#
-# Ejemplo:
-#
-# ARCHIVOS_ADICIONALES = [
-#     "datos_adicional.txt",
-#     "datos_temperatura.txt",
-#     "datos_otro_programa.txt"
-# ]
-#
-# Todos deben contener valores numericos separados por comas.
-# Si un archivo no existe, se omite automaticamente.
-# ==========================================================
 
 ARCHIVOS_ADICIONALES = [
     "datos_adicional.txt"
@@ -124,6 +112,65 @@ def guardar_archivo(ruta, contenido):
 
 
 # ==========================================================
+# GUARDAR HISTORIAL ACUMULADO DIARIO
+# ==========================================================
+
+def guardar_acumulado_diario(contenido):
+
+    fecha_actual = datetime.now()
+
+    nombre_archivo = (
+        f"datos_acumulados_{fecha_actual:%Y-%m-%d}.txt"
+    )
+
+    ruta_diaria = os.path.join(
+        DIRECTORIO,
+        nombre_archivo
+    )
+
+    fecha_hora = fecha_actual.strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+
+    try:
+
+        with open(
+            ruta_diaria,
+            "a",
+            encoding="utf-8"
+        ) as archivo:
+
+            # Fecha, hora y todos los valores separados por comas
+            archivo.write(
+                f"{fecha_hora},{contenido}\n"
+            )
+
+            archivo.flush()
+            os.fsync(archivo.fileno())
+
+        print(
+            f"[HISTORIAL] Registro guardado: {nombre_archivo}",
+            flush=True
+        )
+
+        logging.info(
+            "Historial diario actualizado: %s",
+            nombre_archivo
+        )
+
+    except Exception as error:
+
+        print(
+            f"[ERROR] No se pudo guardar historial diario: {error}",
+            flush=True
+        )
+
+        logging.exception(
+            "Error guardando historial diario"
+        )
+
+
+# ==========================================================
 # VALIDACION DE DATOS
 # ==========================================================
 
@@ -131,7 +178,6 @@ def validar_datos(contenido):
 
     contenido = contenido.strip()
 
-    # Eliminar comas finales
     contenido = contenido.rstrip(",").strip()
 
     if not contenido:
@@ -437,6 +483,11 @@ def actualizar_consolidado():
             contenido_final
         )
 
+        # GUARDAR UNA COPIA DE ESTA MEDICION EN EL HISTORIAL
+        guardar_acumulado_diario(
+            contenido_final
+        )
+
         print("\n========================================")
         print(" CONSOLIDADO ACTUALIZADO")
         print("========================================")
@@ -454,6 +505,12 @@ def actualizar_consolidado():
         )
 
         print("Archivo: datos_completos.txt")
+
+        print(
+            "Historial diario: datos_acumulados_"
+            f"{datetime.now():%Y-%m-%d}.txt"
+        )
+
         print("========================================")
 
         logging.info(
@@ -491,6 +548,7 @@ def main():
     print("Adquisicion simultanea: ACTIVA")
     print("Archivos adicionales: ACTIVOS")
     print("Consolidacion automatica: ACTIVA")
+    print("Historial acumulado diario: ACTIVO")
     print("Conservacion de datos anteriores: ACTIVA")
     print("Correccion de comas finales: ACTIVA")
     print("Presiona CTRL+C para detener")
@@ -572,3 +630,4 @@ if __name__ == "__main__":
         logging.info(
             "Sistema detenido manualmente"
         )
+EOF
