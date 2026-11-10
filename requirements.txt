@@ -29,3 +29,10 @@ sudo systemctl status adquisicion-irradiancia.service
 
 
 sudo journalctl -u adquisicion-irradiancia.service -n 50 --no-pager
+
+
+start service
+sudo systemctl start adquisicion-irradiancia.service
+
+stop service 
+sudo systemctl stop adquisicion-irradiancia.service
