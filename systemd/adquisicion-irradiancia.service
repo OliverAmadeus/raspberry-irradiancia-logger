@@ -7,8 +7,8 @@ Wants=network-online.target
 [Service]
 Type=simple
 
-User=rasp4
-Group=rasp4
+User=root
+Group=root
 
 WorkingDirectory=/home/rasp4/Documents
 
